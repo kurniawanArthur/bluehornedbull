@@ -31,7 +31,7 @@ window.addEventListener("load", function () {
             this.frameY = 0;
             this.image = document.getElementById("bull")
         }
-        restart(){
+        restart() {
             this.collisionX = this.game.width * 0.5;
             this.collisionY = this.game.height * 0.5;
             this.spriteX = this.collisionX - this.width * 0.5;
@@ -411,7 +411,7 @@ window.addEventListener("load", function () {
                 }
             })
             window.addEventListener("keydown", e => {
-                if (e.key == "d") this.debug = !this.debug;
+                if (e.key == "D") this.debug = !this.debug;
                 else if (e.key == "r") this.restart();
             })
         }
