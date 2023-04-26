@@ -368,7 +368,7 @@ window.addEventListener("load", function () {
             this.width = this.canvas.width;
             this.height = this.canvas.height;
             this.topMargin = 260;
-            this.debug = true;
+            this.debug = false;
             this.player = new Player(this);
             this.fps = 70;
             this.timer = 0;
@@ -385,7 +385,7 @@ window.addEventListener("load", function () {
             this.gameObjects = [];
             this.score = 0;
             this.gameOver = false;
-            this.winningScore = 30;
+            this.winningScore = 20;
             this.lostHatchlings = 0;
             this.mouse = {
                 x: this.width * 0.5,
