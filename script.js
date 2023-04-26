@@ -442,9 +442,10 @@ window.addEventListener("load", function () {
             context.save();
             context.textAlign = "left";
             context.fillText("Score: " + this.score, 25, 50);
-            if (this.debug) {
-                context.fillText("Lost: " + this.lostHatchlings, 25, 100);
-            }
+            context.fillText("Lost: " + this.lostHatchlings, 25, 100);
+            // if (this.debug) {
+            //     context.fillText("Lost: " + this.lostHatchlings, 25, 100);
+            // }
             context.restore();
 
             // win / lose massage
@@ -461,7 +462,7 @@ window.addEventListener("load", function () {
                 context.shadowColor = "blue";
                 let massage1;
                 let massage2;
-                if (this.lostHatchlings <= 10) {
+                if (this.lostHatchlings <= 5) {
                     // win
                     massage1 = "Congratulations! You won!";
                     massage2 = `You bullied the bullies!`;
