@@ -1,9 +1,11 @@
 const startBtn = document.getElementById("startBtn");
 const imgOverlay = document.getElementById("overlay");
+const modeBtn = document.getElementsByClassName("mode")
 const difBtn = document.getElementsByClassName("btn");
 const welcomeMsg = document.getElementById("welcomeMassage")
 
-let diff = ["Medium"]
+let diff = ["Medium"];
+let mode = ["EggSavior"];
 
 for (let i = 0; i < difBtn.length; i++) {
     difBtn[i].addEventListener("click", function (e) {
@@ -13,6 +15,16 @@ for (let i = 0; i < difBtn.length; i++) {
         current[0].className = current[0].className.replace(" active", "");
         this.className += " active";
         console.log(diff)
+    })
+}
+for (let i = 0; i < modeBtn.length; i++) {
+    modeBtn[i].addEventListener("click", function (e) {
+        mode.splice(0, 1)
+        mode.push(e.target.innerText);
+        let current = document.getElementsByClassName("activeM");
+        current[0].className = current[0].className.replace(" activeM", "");
+        this.className += " activeM";
+        console.log(mode)
     })
 }
 
@@ -402,6 +414,9 @@ startBtn.addEventListener("click", function () {
             this.topMargin = 260;
             this.debug = false;
             this.player = new Player(this);
+            this.gm = [];
+            this.time = 0;
+            this.timeInterval = 10000;
             this.difficult = []
             this.fps = 70;
             this.timer = 0;
@@ -409,7 +424,7 @@ startBtn.addEventListener("click", function () {
             this.eggTimer = 0;
             this.eggInterval = 1000;
             this.numberOfObstacles = 10;
-            this.maxEggs = 5;
+            this.maxEggs = [];
             this.obstacles = [];
             this.eggs = [];
             this.enemies = [];
@@ -418,7 +433,7 @@ startBtn.addEventListener("click", function () {
             this.gameObjects = [];
             this.score = 0;
             this.gameOver = false;
-            this.winningScore = 20;
+            this.winningScore = 0;
             this.lostHatchlings = 0;
             this.lhDifficult = [];
             this.mouse = {
@@ -446,19 +461,73 @@ startBtn.addEventListener("click", function () {
             })
             window.addEventListener("keydown", e => {
                 if (e.key == "D") this.debug = !this.debug;
-                // else if (e.key == "r") this.restart();
-                // else if (e.key == "x") window.location.reload()
             })
+        }
+        gameMode() {
+            this.gm.push(mode);
         }
         difficulty() {
             this.difficult.push(diff);
-            if (diff == "Easy") this.lhDifficult.push(8);
-            else if (diff == "Medium") this.lhDifficult.push(8);
-            else if (diff == "Hard") this.lhDifficult.push(6);
-            else if (diff == "Hell") this.lhDifficult.push(6);
-            else if (diff == "Heaven") this.lhDifficult.push(3);
+            // eggsavior
+            if (this.gm == "EggSavior") {
+                this.winningScore += 20;
+                if (diff == "Easy") this.lhDifficult.push(8);
+                else if (diff == "Medium") this.lhDifficult.push(8);
+                else if (diff == "Hard") this.lhDifficult.push(6);
+                else if (diff == "Hell") this.lhDifficult.push(6);
+                else if (diff == "Heaven") this.lhDifficult.push(3);
+            } else if (this.gm == "EggMania") {
+                this.winningScore += 1000;
+                if (diff == "Easy") this.maxEggs.push(8);
+                else if (diff == "Medium") this.maxEggs.push(8);
+                else if (diff == "Hard") this.maxEggs.push(6);
+                else if (diff == "Hell") this.maxEggs.push(6);
+                else if (diff == "Heaven") this.maxEggs.push(3);
+            }
         }
-        render(context, deltaTime) {
+
+        EggManiaRender(context, deltaTime) {
+            if (this.timer > this.interval) {
+                context.clearRect(0, 0, this.width, this.height);
+                this.gameObjects = [this.player, ...this.eggs, ...this.hatchlings];
+                // sort by vertically
+                this.gameObjects.sort((a, b) => {
+                    return a.collisionY - b.collisionY;
+                });
+                this.gameObjects.forEach(object => {
+                    object.draw(context);
+                    object.update(deltaTime);
+                });
+
+                this.timer = 0;
+            }
+            this.timer += deltaTime;
+
+            // adds eggs periodically
+            if (this.eggTimer > this.eggInterval && this.eggs.length < this.maxEggs && !this.gameOver) {
+                this.addEgg();
+                this.eggTimer = 0;
+            } else {
+                this.eggTimer += deltaTime;
+            }
+
+            // show time
+            const displayTime = (this.time * 0.001).toFixed(0);
+            context.save();
+            context.textAlign = "center"
+            context.font = "40px monospace";
+            context.fillText(displayTime, 640, 50);
+            context.restore();
+            this.time += deltaTime
+
+            // draw status text
+            context.save();
+            context.textAlign = "left";
+            context.fillText("Score: " + this.score, 25, 75);
+            context.restore();
+        }
+
+        EggSaviorRender(context, deltaTime) {
             if (this.timer > this.interval) {
                 context.clearRect(0, 0, this.width, this.height);
                 this.gameObjects = [this.player, ...this.eggs, ...this.obstacles, ...this.enemies, ...this.hatchlings, ...this.particles];
@@ -486,9 +555,6 @@ startBtn.addEventListener("click", function () {
             context.textAlign = "left";
             context.fillText("Score: " + this.score, 25, 50);
             context.fillText("Lost: " + this.lostHatchlings, 25, 100);
-            // if (this.debug) {
-            //     context.fillText("Lost: " + this.lostHatchlings, 25, 100);
-            // }
             context.restore();
 
             // win / lose massage
@@ -562,48 +628,54 @@ startBtn.addEventListener("click", function () {
             this.init();
         }
         init() {
-            if (this.difficult == "Easy") {
-                for (let i = 0; i < 4; i++) {
-                    this.addEnemy();
-                }
-            } else if (this.difficult == "Medium") {
-                for (let i = 0; i < 8; i++) {
-                    this.addEnemy();
-                }
-            } else if (this.difficult == "Hard") {
-                for (let i = 0; i < 12; i++) {
-                    this.addEnemy();
-                }
-            } else if (this.difficult == "Hell") {
-                for (let i = 0; i < 40; i++) {
-                    this.addEnemy();
+            if (this.gm == "EggSavior" || this.gm == "Eggless") {
+                if (this.difficult == "Easy") {
+                    for (let i = 0; i < 4; i++) {
+                        this.addEnemy();
+                    }
+                } else if (this.difficult == "Medium") {
+                    for (let i = 0; i < 8; i++) {
+                        this.addEnemy();
+                    }
+                } else if (this.difficult == "Hard") {
+                    for (let i = 0; i < 12; i++) {
+                        this.addEnemy();
+                    }
+                } else if (this.difficult == "Hell") {
+                    for (let i = 0; i < 40; i++) {
+                        this.addEnemy();
+                    }
                 }
             }
             let attempts = 0;
-            while (this.obstacles.length < this.numberOfObstacles && attempts < 500) {
-                let testObstacles = new Obstacle(this);
-                let overlap = false;
-                this.obstacles.forEach(obstacles => {
-                    const dx = testObstacles.collisionX - obstacles.collisionX;
-                    const dy = testObstacles.collisionY - obstacles.collisionY;
-                    const distance = Math.hypot(dy, dx);
-                    const distanceBuffer = 150
-                    const sumOfRadii = testObstacles.collisionRadius + obstacles.collisionRadius + distanceBuffer;
-                    if (distance < sumOfRadii) {
-                        overlap = true;
+            if (this.gm == "EggSavior" || this.gm == "Eggless") {
+                while (this.obstacles.length < this.numberOfObstacles && attempts < 500) {
+                    let testObstacles = new Obstacle(this);
+                    let overlap = false;
+                    this.obstacles.forEach(obstacles => {
+                        const dx = testObstacles.collisionX - obstacles.collisionX;
+                        const dy = testObstacles.collisionY - obstacles.collisionY;
+                        const distance = Math.hypot(dy, dx);
+                        const distanceBuffer = 150
+                        const sumOfRadii = testObstacles.collisionRadius + obstacles.collisionRadius + distanceBuffer;
+                        if (distance < sumOfRadii) {
+                            overlap = true;
+                        }
+                    });
+                    const margin = testObstacles.collisionRadius * 3;
+                    if (!overlap && testObstacles.spriteX > 0 && testObstacles.spriteX < this.width - testObstacles.width && testObstacles.collisionY > this.topMargin + margin && testObstacles.collisionY < this.height - margin) {
+                        this.obstacles.push(testObstacles);
                     }
-                });
-                const margin = testObstacles.collisionRadius * 3;
-                if (!overlap && testObstacles.spriteX > 0 && testObstacles.spriteX < this.width - testObstacles.width && testObstacles.collisionY > this.topMargin + margin && testObstacles.collisionY < this.height - margin) {
-                    this.obstacles.push(testObstacles);
+                    attempts++;
                 }
-                attempts++;
             }
         }
     }
 
     const game = new Game(canvas);
-    game.difficulty()
+    game.gameMode();
+    console.log(game)
+    game.difficulty();
     game.init();
     console.log(game);
 
@@ -612,7 +684,9 @@ startBtn.addEventListener("click", function () {
         const deltaTime = timeStamp - lastTime;
         lastTime = timeStamp;
 
-        game.render(ctx, deltaTime)
+        if (game.gm == "EggSavior") game.EggSaviorRender(ctx, deltaTime);
+        if (game.gm == "EggMania") game.EggManiaRender(ctx, deltaTime);
+
         requestAnimationFrame(animate);
     }
     animate(0);

@@ -12,14 +12,18 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    margin: 20px;
-    padding: 20px;
+    /* margin: 10px;
+    padding: 20px; */
 }
 
 .wlc {
-    font-size: 60px;
-    margin-bottom: 55px;
+    display: inline-block;
+    font-size: 90px;
+    margin-bottom: 60px;
     font-weight: 600;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 8px;
 }
 
 h3 {
