@@ -16,20 +16,33 @@
     padding: 20px;
 }
 
-h1 {
+.wlc {
     font-size: 60px;
-    margin-bottom: 50px;
+    margin-bottom: 55px;
     font-weight: 600;
 }
 
 h3 {
     font-size: 30px;
+    text-underline-offset: 2.5px;
+    text-decoration: underline;
+    text-decoration-style: double;
     font-weight: 300;
-    margin-top: 20px;
+    margin-top: 25px;
+}
+
+.mode {
+    color: white;
+    background-color: gray;
+    margin: 3px;
+    font-size: 20px;
+    padding: 2px;
+    border: none;
 }
 
 .btn {
-    margin: 3px;
+    margin: 2px;
+    margin-top: 1px;
     font-size: 20px;
     padding: 2px;
 }
@@ -42,20 +55,25 @@ h3 {
     font-size: 30px;
 }
 
-#dificultBtn:hover {
-    color: white;
-    background-color: black;
+.activeM, .mode:hover {
+    color: black;
+    background-color: white;
+    cursor: pointer;
+    font-size: 30px;
+    border-style: solid;
 }
 
+
 #startBtn {
+    font-size: 40px;
     border: none;
     font-weight: 300;
     background-color: inherit;
-    padding: 10px;
-    margin-top: 30px;
+    margin-top: 50px;
 }
 
 #startBtn:hover {
+    font-size: 45px;
     font-weight: 700;
     cursor: pointer;
     color: skyblue;

@@ -8,13 +8,20 @@
     <title>bluebullhere!</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik+Burned&family=Rubik+Wet+Paint&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Burned&family=Rubik+Wet+Paint&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div id="welcomeMassage">
-        <h1>Welcome to the game...</h1>
+        <h1 class="wlc">Welcome to the game...</h1>
+        <h3>Mode:</h3>
+        <div id="allModeBtn">
+            <button class="mode">EggMania</button>
+            <button class="mode activeM">EggSavior</button>
+            <button class="mode">Eggless</button>
+        </div>
         <h3>Choose your Destination: </h3>
         <div id="allDifBtn">
             <button class="btn">Heaven</button>
@@ -22,7 +29,7 @@
             <button class="btn active">Medium</button>
             <button class="btn">Hard</button>
             <button class="btn">Hell</button>
-        </div>  
+        </div>
         <button id="startBtn">
             <h1>Start Game</h1>
         </button>
