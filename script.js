@@ -1,5 +1,31 @@
-window.addEventListener("load", function () {
+const startBtn = document.getElementById("startBtn");
+const imgOverlay = document.getElementById("overlay");
+const difBtn = document.getElementsByClassName("btn");
+const welcomeMsg = document.getElementById("welcomeMassage")
+
+let diff = ["Medium"]
+
+for (let i = 0; i < difBtn.length; i++) {
+    difBtn[i].addEventListener("click", function (e) {
+        diff.splice(0, 1)
+        diff.push(e.target.innerText);
+        let current = document.getElementsByClassName("active");
+        current[0].className = current[0].className.replace(" active", "");
+        this.className += " active";
+        console.log(diff)
+    })
+}
+
+startBtn.addEventListener("click", function () {
+
     const canvas = document.getElementById("canvas1");
+
+    welcomeMsg.style.display = "none"
+    canvas.style.position = "absolute"
+    imgOverlay.style.position = "absolute"
+    canvas.classList.toggle("display")
+    imgOverlay.classList.toggle("display");
+
     const ctx = canvas.getContext("2d");
     canvas.width = 1280;
     canvas.height = 720;
@@ -233,6 +259,12 @@ window.addEventListener("load", function () {
                 this.markedForDeletion = true;
                 this.game.removeGameObjects();
                 if (!this.game.gameOver) this.game.score++;
+                if (this.game.score >= this.game.winningScore) {
+                    window.addEventListener("keydown", e => {
+                        if (e.key == "r") this.game.restart();
+                        else if (e.key == "x") window.location.reload()
+                    })
+                }
                 for (let i = 0; i < 3; i++) {
                     this.game.particles.push(new Firefly(this.game, this.collisionX, this.collisionY, "yellow"));
                 }
@@ -370,6 +402,7 @@ window.addEventListener("load", function () {
             this.topMargin = 260;
             this.debug = false;
             this.player = new Player(this);
+            this.difficult = []
             this.fps = 70;
             this.timer = 0;
             this.interval = 1000 / this.fps;
@@ -387,6 +420,7 @@ window.addEventListener("load", function () {
             this.gameOver = false;
             this.winningScore = 20;
             this.lostHatchlings = 0;
+            this.lhDifficult = [];
             this.mouse = {
                 x: this.width * 0.5,
                 y: this.height * 0.5,
@@ -412,8 +446,17 @@ window.addEventListener("load", function () {
             })
             window.addEventListener("keydown", e => {
                 if (e.key == "D") this.debug = !this.debug;
-                else if (e.key == "r") this.restart();
+                // else if (e.key == "r") this.restart();
+                // else if (e.key == "x") window.location.reload()
             })
+        }
+        difficulty() {
+            this.difficult.push(diff);
+            if (diff == "Easy") this.lhDifficult.push(8);
+            else if (diff == "Medium") this.lhDifficult.push(8);
+            else if (diff == "Hard") this.lhDifficult.push(6);
+            else if (diff == "Hell") this.lhDifficult.push(6);
+            else if (diff == "Heaven") this.lhDifficult.push(3);
         }
         render(context, deltaTime) {
             if (this.timer > this.interval) {
@@ -462,7 +505,7 @@ window.addEventListener("load", function () {
                 context.shadowColor = "blue";
                 let massage1;
                 let massage2;
-                if (this.lostHatchlings <= 5) {
+                if (this.lostHatchlings <= this.lhDifficult) {
                     // win
                     massage1 = "Congratulations! You won!";
                     massage2 = `You bullied the bullies!`;
@@ -477,9 +520,9 @@ window.addEventListener("load", function () {
                 }
                 context.font = "85px Rubik Burned"
                 context.fillText(massage1, this.width * 0.5, this.height * 0.5 - 20);
-                context.font = "40px Rubik Wet Paint"
+                context.font = "30px Rubik Wet Paint"
                 context.fillText(massage2, this.width * 0.5, this.height * 0.5 + 30);
-                context.fillText(`Final score: ${this.score}. press 'R' to butt heads again`, this.width * 0.5, this.height * 0.5 + 80);
+                context.fillText(`Final score: ${this.score}. press 'R' to butt heads again or press 'X' to EXIT.`, this.width * 0.5, this.height * 0.5 + 80);
                 context.restore();
             }
         }
@@ -519,8 +562,22 @@ window.addEventListener("load", function () {
             this.init();
         }
         init() {
-            for (let i = 0; i < 5; i++) {
-                this.addEnemy();
+            if (this.difficult == "Easy") {
+                for (let i = 0; i < 4; i++) {
+                    this.addEnemy();
+                }
+            } else if (this.difficult == "Medium") {
+                for (let i = 0; i < 8; i++) {
+                    this.addEnemy();
+                }
+            } else if (this.difficult == "Hard") {
+                for (let i = 0; i < 12; i++) {
+                    this.addEnemy();
+                }
+            } else if (this.difficult == "Hell") {
+                for (let i = 0; i < 40; i++) {
+                    this.addEnemy();
+                }
             }
             let attempts = 0;
             while (this.obstacles.length < this.numberOfObstacles && attempts < 500) {
@@ -546,6 +603,7 @@ window.addEventListener("load", function () {
     }
 
     const game = new Game(canvas);
+    game.difficulty()
     game.init();
     console.log(game);
 

@@ -13,8 +13,22 @@
 </head>
 
 <body>
-    <canvas id="canvas1"></canvas>
-    <img id="overlay" src="img/overlay.png">
+    <div id="welcomeMassage">
+        <h1>Welcome to the game...</h1>
+        <h3>Choose your Destination: </h3>
+        <div id="allDifBtn">
+            <button class="btn">Heaven</button>
+            <button class="btn">Easy</button>
+            <button class="btn active">Medium</button>
+            <button class="btn">Hard</button>
+            <button class="btn">Hell</button>
+        </div>  
+        <button id="startBtn">
+            <h1>Start Game</h1>
+        </button>
+    </div>
+    <canvas id="canvas1" class="ctx display"></canvas>
+    <img id="overlay" src="img/overlay.png" class="img display">
     <img id="obstacles" src="img/obstacles.png">
     <img id="bull" src="img/bull.png">
     <img id="egg" src="img/egg.png">
