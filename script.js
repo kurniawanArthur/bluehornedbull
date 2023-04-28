@@ -5,7 +5,7 @@ const difBtn = document.getElementsByClassName("btn");
 const welcomeMsg = document.getElementById("welcomeMassage");
 const allDifBtn = document.getElementById("allDifBtn")
 const highscore = document.getElementById("highscore")
-const viewScore = localStorage.getItem("highscore")
+const viewScore = localStorage.getItem("highscore");
 
 let diff = ["Medium"];
 let mode = ["EggSavior"];
@@ -31,6 +31,7 @@ for (let i = 0; i < modeBtn.length; i++) {
         if (e.target.innerText == "EggMania") {
             allDifBtn.style.display = "none"
             highscore.style.display = "block"
+            if(viewScore <= 0 || viewScore === null || viewScore === undefined || isNaN(viewScore)) localStorage.setItem("highscore", "0");
             highscore.innerText = `Today highscore : ${viewScore}`
         } else if (e.target.innerText != "EggMania") {
             allDifBtn.style.display = "block"
