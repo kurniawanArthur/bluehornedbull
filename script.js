@@ -1,18 +1,21 @@
 const startBtn = document.getElementById("startBtn");
 const imgOverlay = document.getElementById("overlay");
-const modeBtn = document.getElementsByClassName("mode")
+const modeBtn = document.getElementsByClassName("mode");
 const difBtn = document.getElementsByClassName("btn");
 const welcomeMsg = document.getElementById("welcomeMassage");
-const allDifBtn = document.getElementById("allDifBtn")
-const highscore = document.getElementById("highscore")
+const allDifBtn = document.getElementById("allDifBtn");
+const scorebox = document.getElementById("scorebox");
+const highscore = document.getElementById("highscore");
+const endscore = document.getElementById("endscore")
 let viewScore = localStorage.getItem("highscore");
+let latestScore = localStorage.getItem("endscore");
 
 let diff = ["Medium"];
 let mode = ["EggSavior"];
 
 for (let i = 0; i < difBtn.length; i++) {
     difBtn[i].addEventListener("click", function (e) {
-        diff.splice(0, 1)
+        diff.splice(0, 1);
         diff.push(e.target.innerText);
         let current = document.getElementsByClassName("active");
         current[0].className = current[0].className.replace(" active", "");
@@ -22,35 +25,42 @@ for (let i = 0; i < difBtn.length; i++) {
 }
 for (let i = 0; i < modeBtn.length; i++) {
     modeBtn[i].addEventListener("click", function (e) {
-        mode.splice(0, 1)
+        mode.splice(0, 1);
         mode.push(e.target.innerText);
         let current = document.getElementsByClassName("activeM");
         current[0].className = current[0].className.replace(" activeM", "");
         this.className += " activeM";
         console.log(mode)
         if (e.target.innerText == "EggMania") {
-            allDifBtn.style.display = "none"
+            allDifBtn.style.display = "none";
+            scorebox.style.display = "inline-flex"
             highscore.style.display = "block";
+            if(latestScore > 0){
+                endscore.style.display = "block";
+                endscore.innerText = `Latest Score : ${latestScore}`;
+            }
             if(viewScore > 0){
-                highscore.innerText = `Today highscore : ${viewScore}`
+                highscore.innerText = `Today highscore : ${viewScore}`;
             } else {
-                highscore.innerText = `Today highscore : ${0}`
+                highscore.innerText = `Today highscore : ${0}`;
             }
         } else if (e.target.innerText != "EggMania") {
-            allDifBtn.style.display = "block"
-            highscore.style.display = "none"
+            allDifBtn.style.display = "block";
+            scorebox.style.display = "none"
+            highscore.style.display = "none";
+            endscore.style.display = "none";
         }
-    })
+    });
 }
 
 startBtn.addEventListener("click", function () {
 
     const canvas = document.getElementById("canvas1");
 
-    welcomeMsg.style.display = "none"
-    canvas.style.position = "absolute"
-    imgOverlay.style.position = "absolute"
-    canvas.classList.toggle("display")
+    welcomeMsg.style.display = "none";
+    canvas.style.position = "absolute";
+    imgOverlay.style.position = "absolute";
+    canvas.classList.toggle("display");
     imgOverlay.classList.toggle("display");
 
     const ctx = canvas.getContext("2d");
@@ -60,7 +70,7 @@ startBtn.addEventListener("click", function () {
     ctx.fillStyle = "white";
     ctx.lineWidth = 3;
     ctx.strokeStyle = "black"
-    ctx.font = "40px Rubik Wet Paint"
+    ctx.font = "40px Rubik Wet Paint";
     ctx.textAlign = "center";
 
     class Player {
@@ -297,8 +307,14 @@ startBtn.addEventListener("click", function () {
                         if (e.key == "x") window.location.reload()
                     })
                 }
-                for (let i = 0; i < 3; i++) {
-                    this.game.particles.push(new Firefly(this.game, this.collisionX, this.collisionY, "yellow"));
+                if(this.game.difficult == "Heaven" || this.game.difficult == "Easy"){
+                    for (let i = 0; i < 20; i++) {
+                        this.game.particles.push(new Firefly(this.game, this.collisionX, this.collisionY, "yellow"));
+                    }
+                } else {
+                    for (let i = 0; i < 3; i++) {
+                        this.game.particles.push(new Firefly(this.game, this.collisionX, this.collisionY, "yellow"));
+                    }
                 }
             }
             // collision with object
@@ -515,7 +531,7 @@ startBtn.addEventListener("click", function () {
             this.timer += deltaTime;
 
             // adds eggs periodically
-            if (this.eggTimer > this.eggInterval && this.eggs.length < this.maxEggs && !this.gameOver) {
+            if (this.eggTimer > this.eggInterval && this.eggs.length < this.maxEggs && !this.gameOver && this.mouse.pressed) {
                 this.addEgg();
                 this.eggTimer = 0;
             } else {
@@ -559,7 +575,8 @@ startBtn.addEventListener("click", function () {
                 context.fillText(massage2, this.width * 0.5, this.height * 0.5 + 30);
                 context.fillText(`Final score: ${this.score}. press 'X' to EXIT.`, this.width * 0.5, this.height * 0.5 + 80);
                 context.restore();
-                localStorage.setItem("highscore", `${this.score}`)
+                if(this.score > viewScore) localStorage.setItem("highscore", `${this.score}`);
+                localStorage.setItem("endscore", `${this.score}`)
             }
         }
 
