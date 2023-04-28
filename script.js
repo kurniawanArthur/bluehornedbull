@@ -35,11 +35,11 @@ for (let i = 0; i < modeBtn.length; i++) {
             allDifBtn.style.display = "none";
             scorebox.style.display = "inline-flex"
             highscore.style.display = "block";
-            if(latestScore > 0){
+            if (latestScore > 0) {
                 endscore.style.display = "block";
                 endscore.innerText = `Latest Score : ${latestScore}`;
             }
-            if(viewScore > 0){
+            if (viewScore > 0) {
                 highscore.innerText = `Today highscore : ${viewScore}`;
             } else {
                 highscore.innerText = `Today highscore : ${0}`;
@@ -307,8 +307,12 @@ startBtn.addEventListener("click", function () {
                         if (e.key == "x") window.location.reload()
                     })
                 }
-                if(this.game.difficult == "Heaven" || this.game.difficult == "Easy"){
+                if (this.game.difficult == "Heaven") {
                     for (let i = 0; i < 20; i++) {
+                        this.game.particles.push(new Firefly(this.game, this.collisionX, this.collisionY, "yellow"));
+                    }
+                } else if (this.game.difficult == "Easy") {
+                    for (let i = 0; i < 10; i++) {
                         this.game.particles.push(new Firefly(this.game, this.collisionX, this.collisionY, "yellow"));
                     }
                 } else {
@@ -575,7 +579,7 @@ startBtn.addEventListener("click", function () {
                 context.fillText(massage2, this.width * 0.5, this.height * 0.5 + 30);
                 context.fillText(`Final score: ${this.score}. press 'X' to EXIT.`, this.width * 0.5, this.height * 0.5 + 80);
                 context.restore();
-                if(this.score > viewScore) localStorage.setItem("highscore", `${this.score}`);
+                if (this.score > viewScore) localStorage.setItem("highscore", `${this.score}`);
                 localStorage.setItem("endscore", `${this.score}`)
             }
         }
