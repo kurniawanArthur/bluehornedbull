@@ -5,7 +5,7 @@ const difBtn = document.getElementsByClassName("btn");
 const welcomeMsg = document.getElementById("welcomeMassage");
 const allDifBtn = document.getElementById("allDifBtn")
 const highscore = document.getElementById("highscore")
-const viewScore = localStorage.getItem("highscore");
+let viewScore = localStorage.getItem("highscore");
 
 let diff = ["Medium"];
 let mode = ["EggSavior"];
@@ -30,9 +30,12 @@ for (let i = 0; i < modeBtn.length; i++) {
         console.log(mode)
         if (e.target.innerText == "EggMania") {
             allDifBtn.style.display = "none"
-            highscore.style.display = "block"
-            if(viewScore <= 0 || viewScore === null || viewScore === undefined || isNaN(viewScore)) localStorage.setItem("highscore", "0");
-            highscore.innerText = `Today highscore : ${viewScore}`
+            highscore.style.display = "block";
+            if(viewScore > 0){
+                highscore.innerText = `Today highscore : ${viewScore}`
+            } else {
+                highscore.innerText = `Today highscore : ${0}`
+            }
         } else if (e.target.innerText != "EggMania") {
             allDifBtn.style.display = "block"
             highscore.style.display = "none"
@@ -482,7 +485,7 @@ startBtn.addEventListener("click", function () {
         }
         gameMode() {
             this.gm.push(mode);
-            if(this.gm == "EggMania") this.maxEggs += 5;
+            if (this.gm == "EggMania") this.maxEggs += 5;
         }
         difficulty() {
             this.difficult.push(diff);
