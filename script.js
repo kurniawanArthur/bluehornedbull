@@ -538,7 +538,6 @@ startBtn.addEventListener("click", function () {
             // win / lose massage
             if (displayTime >= this.timeInterval) {
                 this.gameOver = true;
-                console.log(this.time)
                 context.save();
                 context.fillStyle = "rgba(0, 0, 0, 0.5)";
                 context.fillRect(0, 0, this.width, this.height);
@@ -707,7 +706,6 @@ startBtn.addEventListener("click", function () {
 
     const game = new Game(canvas);
     game.gameMode();
-    console.log(game)
     game.difficulty();
     game.init();
     console.log(game);
