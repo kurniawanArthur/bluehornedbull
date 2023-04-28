@@ -2,7 +2,10 @@ const startBtn = document.getElementById("startBtn");
 const imgOverlay = document.getElementById("overlay");
 const modeBtn = document.getElementsByClassName("mode")
 const difBtn = document.getElementsByClassName("btn");
-const welcomeMsg = document.getElementById("welcomeMassage")
+const welcomeMsg = document.getElementById("welcomeMassage");
+const allDifBtn = document.getElementById("allDifBtn")
+const highscore = document.getElementById("highscore")
+const viewScore = localStorage.getItem("highscore")
 
 let diff = ["Medium"];
 let mode = ["EggSavior"];
@@ -25,6 +28,14 @@ for (let i = 0; i < modeBtn.length; i++) {
         current[0].className = current[0].className.replace(" activeM", "");
         this.className += " activeM";
         console.log(mode)
+        if (e.target.innerText == "EggMania") {
+            allDifBtn.style.display = "none"
+            highscore.style.display = "block"
+            highscore.innerText = `Today highscore : ${viewScore}`
+        } else if (e.target.innerText != "EggMania") {
+            allDifBtn.style.display = "block"
+            highscore.style.display = "none"
+        }
     })
 }
 
@@ -277,6 +288,11 @@ startBtn.addEventListener("click", function () {
                         else if (e.key == "x") window.location.reload()
                     })
                 }
+                if ((this.game.time * 0.001).toFixed(0) >= this.game.timeInterval) {
+                    window.addEventListener("keydown", e => {
+                        if (e.key == "x") window.location.reload()
+                    })
+                }
                 for (let i = 0; i < 3; i++) {
                     this.game.particles.push(new Firefly(this.game, this.collisionX, this.collisionY, "yellow"));
                 }
@@ -416,7 +432,7 @@ startBtn.addEventListener("click", function () {
             this.player = new Player(this);
             this.gm = [];
             this.time = 0;
-            this.timeInterval = 10000;
+            this.timeInterval = 100;
             this.difficult = []
             this.fps = 70;
             this.timer = 0;
@@ -424,7 +440,7 @@ startBtn.addEventListener("click", function () {
             this.eggTimer = 0;
             this.eggInterval = 1000;
             this.numberOfObstacles = 10;
-            this.maxEggs = [];
+            this.maxEggs = 5;
             this.obstacles = [];
             this.eggs = [];
             this.enemies = [];
@@ -433,7 +449,7 @@ startBtn.addEventListener("click", function () {
             this.gameObjects = [];
             this.score = 0;
             this.gameOver = false;
-            this.winningScore = 0;
+            this.winningScore = 20;
             this.lostHatchlings = 0;
             this.lhDifficult = [];
             this.mouse = {
@@ -465,25 +481,16 @@ startBtn.addEventListener("click", function () {
         }
         gameMode() {
             this.gm.push(mode);
+            if(this.gm == "EggMania") this.maxEggs += 5;
         }
         difficulty() {
             this.difficult.push(diff);
             // eggsavior
-            if (this.gm == "EggSavior") {
-                this.winningScore += 20;
-                if (diff == "Easy") this.lhDifficult.push(8);
-                else if (diff == "Medium") this.lhDifficult.push(8);
-                else if (diff == "Hard") this.lhDifficult.push(6);
-                else if (diff == "Hell") this.lhDifficult.push(6);
-                else if (diff == "Heaven") this.lhDifficult.push(3);
-            } else if (this.gm == "EggMania") {
-                this.winningScore += 1000;
-                if (diff == "Easy") this.maxEggs.push(8);
-                else if (diff == "Medium") this.maxEggs.push(8);
-                else if (diff == "Hard") this.maxEggs.push(6);
-                else if (diff == "Hell") this.maxEggs.push(6);
-                else if (diff == "Heaven") this.maxEggs.push(3);
-            }
+            if (diff == "Easy") this.lhDifficult.push(8);
+            else if (diff == "Medium") this.lhDifficult.push(8);
+            else if (diff == "Hard") this.lhDifficult.push(6);
+            else if (diff == "Hell") this.lhDifficult.push(6);
+            else if (diff == "Heaven") this.lhDifficult.push(3);
         }
 
         EggManiaRender(context, deltaTime) {
@@ -512,19 +519,45 @@ startBtn.addEventListener("click", function () {
             }
 
             // show time
+            if (this.mouse.pressed) {
+                this.time += deltaTime
+            }
             const displayTime = (this.time * 0.001).toFixed(0);
             context.save();
             context.textAlign = "center"
             context.font = "40px monospace";
             context.fillText(displayTime, 640, 50);
             context.restore();
-            this.time += deltaTime
 
             // draw status text
             context.save();
             context.textAlign = "left";
             context.fillText("Score: " + this.score, 25, 75);
             context.restore();
+
+            // win / lose massage
+            if (displayTime >= this.timeInterval) {
+                this.gameOver = true;
+                console.log(this.time)
+                context.save();
+                context.fillStyle = "rgba(0, 0, 0, 0.5)";
+                context.fillRect(0, 0, this.width, this.height);
+                context.fillStyle = "white";
+                context.textAlign = "center";
+                context.shadowOffsetX = 4;
+                context.shadowOffsetY = 4;
+                context.shadowBlur = 8;
+                context.shadowColor = "blue";
+                let massage1 = "Great Job! You cracked It!";
+                let massage2 = `You collected ${this.score}eggs.`;
+                context.font = "85px Rubik Burned"
+                context.fillText(massage1, this.width * 0.5, this.height * 0.5 - 20);
+                context.font = "30px Rubik Wet Paint"
+                context.fillText(massage2, this.width * 0.5, this.height * 0.5 + 30);
+                context.fillText(`Final score: ${this.score}. press 'X' to EXIT.`, this.width * 0.5, this.height * 0.5 + 80);
+                context.restore();
+                localStorage.setItem("highscore", `${this.score}`)
+            }
         }
 
         EggSaviorRender(context, deltaTime) {

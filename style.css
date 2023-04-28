@@ -12,8 +12,6 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    /* margin: 10px;
-    padding: 20px; */
 }
 
 .wlc {
@@ -27,7 +25,7 @@
 }
 
 h3 {
-    font-size: 30px;
+    font-size: 35px;
     text-underline-offset: 2.5px;
     text-decoration: underline;
     text-decoration-style: double;
@@ -49,6 +47,14 @@ h3 {
     margin-top: 1px;
     font-size: 20px;
     padding: 2px;
+}
+
+#highscore {
+    display: none;
+    font-size: 35px;
+    color: rgb(0, 0, 0);
+    text-shadow: 2px 2px 5px rgb(248, 148, 25);
+    margin-top: 25px;
 }
 
 .active, .btn:hover {
@@ -74,13 +80,15 @@ h3 {
     font-weight: 300;
     background-color: inherit;
     margin-top: 50px;
+    transition: ease-in-out, transform 0.5s;
 }
 
 #startBtn:hover {
-    font-size: 45px;
+    /* font-size: 45px; */
     font-weight: 700;
     cursor: pointer;
     color: skyblue;
+    transform: scale(1.2);
 }
 
 .display {
