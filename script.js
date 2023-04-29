@@ -21,6 +21,16 @@ for (let i = 0; i < difBtn.length; i++) {
         current[0].className = current[0].className.replace(" active", "");
         this.className += " active";
         console.log(diff)
+        if (e.target.innerText == "Hell") {
+            e.target.classList.add("hell");
+            difBtn[0].classList.remove("heaven")
+        } else if (e.target.innerText == "Heaven") {
+            e.target.classList.add("heaven");
+            difBtn[4].classList.remove("hell")
+        } else {
+            difBtn[4].classList.remove("hell")
+            difBtn[0].classList.remove("heaven")
+        }
     })
 }
 for (let i = 0; i < modeBtn.length; i++) {
@@ -38,12 +48,15 @@ for (let i = 0; i < modeBtn.length; i++) {
             e.target.style.borderColor = "skyblue"
             if (latestScore > 0) {
                 endscore.style.display = "block";
+                endscore.style.fontFamily = "Rubik Burned"
                 endscore.innerText = `Latest Score : ${latestScore}`;
             }
             if (viewScore > 0) {
+                // highscore.style.fontFamily = "Rubik Burned"
                 highscore.innerText = `Today highscore : ${viewScore}`;
             } else {
-                highscore.innerText = `Today highscore : ${0}`;
+                // highscore.style.fontFamily = "Rubik Burned"
+                highscore.innerText = `| Today highscore : ${0}`;
             }
         } else if (e.target.innerText != "EggMania") {
             allDifBtn.style.display = "block";
@@ -310,7 +323,8 @@ startBtn.addEventListener("click", function () {
                 }
                 if (this.game.difficult == "Heaven") {
                     for (let i = 0; i < 20; i++) {
-                        this.game.particles.push(new Firefly(this.game, this.collisionX, this.collisionY, "yellow"));
+                        const ffColor = `hsl(${Math.random() * 360}, 100%, 50%)`
+                        this.game.particles.push(new Firefly(this.game, this.collisionX, this.collisionY, ffColor));
                     }
                 } else if (this.game.difficult == "Easy") {
                     for (let i = 0; i < 10; i++) {
@@ -518,6 +532,26 @@ startBtn.addEventListener("click", function () {
             else if (diff == "Heaven") this.lhDifficult.push(3);
         }
 
+        EggManiaMassage(context) {
+            context.save()
+            context.fillStyle = "rgba(0, 0, 0, 0.5)";
+            context.fillRect(0, 0, this.width, this.height);
+            context.textAlign = "center"
+            context.fillStyle = "white"
+            context.font = "55px Rubik Burned"
+            context.fillText("Press 'mouse' to move!", this.width * 0.5, this.height * 0.5 - 40);
+            context.restore();
+            context.save();
+            context.textAlign = "left"
+            context.font = "25px Arial"
+            context.fillText("Instruction: ", this.width * 0.20, this.height * 0.5 + 20);
+            context.fillText("1. Use the mouse to lead the bull (Be wise in moving)", this.width * 0.20, this.height * 0.5 + 55);
+            context.fillText("2. Time and eggs will only increase when the mouse is pressed", this.width * 0.20, this.height * 0.5 + 85);
+            context.fillText("3. The score will increase when the eggs or larvae manage to enter the forest", this.width * 0.20, this.height * 0.5 + 115);
+            context.fillText("4. The game will stop when the time reaches 100", this.width * 0.20, this.height * 0.5 + 145);
+            context.restore();
+        }
+
         EggManiaRender(context, deltaTime) {
             if (this.timer > this.interval) {
                 context.clearRect(0, 0, this.width, this.height);
@@ -534,6 +568,10 @@ startBtn.addEventListener("click", function () {
                 this.timer = 0;
             }
             this.timer += deltaTime;
+
+            if (!this.mouse.pressed && this.time <= 0) {
+                this.EggManiaMassage(ctx);
+            }
 
             // adds eggs periodically
             if (this.eggTimer > this.eggInterval && this.eggs.length < this.maxEggs && !this.gameOver && this.mouse.pressed) {
@@ -631,8 +669,13 @@ startBtn.addEventListener("click", function () {
                 let massage2;
                 if (this.lostHatchlings <= this.lhDifficult) {
                     // win
-                    massage1 = "Congratulations! You won!";
-                    massage2 = `You bullied the bullies!`;
+                    if(this.difficult == "Heaven"){
+                        massage1 = "Congratulations! You did it!"
+                        massage2 = "Let's move to the next destination"
+                    } else {
+                        massage1 = "Congratulations! You won!";
+                        massage2 = `You bullied the bullies!`;
+                    }
                 } else {
                     // lose
                     context.shadowOffsetX = 4;
