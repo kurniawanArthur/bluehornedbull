@@ -14,6 +14,31 @@
     transform: translate(-50%, -50%);
 }
 
+#eggss {
+    letter-spacing: -20px;
+    margin-left: -20px;
+    position: relative;
+    animation: jump 1s ease-in-out infinite;
+}
+
+@keyframes jump {
+    0% {
+      bottom: 0;
+    }
+    50% {
+      bottom: 20px;
+    }
+    100% {
+      bottom: 0;
+    }
+  }
+
+#bullss {
+    letter-spacing: -10px;
+    margin-left: -25px;
+    position: relative;
+}
+
 .wlc {
     display: inline-block;
     font-size: 90px;
@@ -50,20 +75,22 @@ h3 {
 }
 
 #scorebox {
-    background-color: rgb(30, 30, 30);
+    background: url(img/background.png);
+    /* background-color: rgb(30, 30, 30); */
     display: none;
     width: max-content;
-    border: 2px;
-    border-style: solid;
-    border-color: black;
-    margin-top: 20px;
+    border-width: 8px;
+    border-style: inset;
+    border-radius: 20px;
+    border-color: navy;
+    margin-top: 30px;
 }
 
 #endscore {
     display: none;
     font-size: 30px;
-    color: #d7e5e5;
-    text-shadow: 2px 2px 5px red;
+    color: rgb(255, 255, 255);
+    text-shadow: 2px 2px 5px #d7e5e5;
     margin: 3px auto;
     margin-right: 5px;
     padding: 10px;
@@ -94,7 +121,11 @@ h3 {
     background-color: white;
     cursor: pointer;
     font-size: 30px;
-    border-style: solid;
+    border-width: 3px;
+    border-style: outset;
+    border-color: gold;
+    border-radius: 15px;
+    padding: 4px;
 }
 
 

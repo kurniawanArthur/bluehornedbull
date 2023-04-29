@@ -35,6 +35,7 @@ for (let i = 0; i < modeBtn.length; i++) {
             allDifBtn.style.display = "none";
             scorebox.style.display = "inline-flex"
             highscore.style.display = "block";
+            e.target.style.borderColor = "skyblue"
             if (latestScore > 0) {
                 endscore.style.display = "block";
                 endscore.innerText = `Latest Score : ${latestScore}`;
