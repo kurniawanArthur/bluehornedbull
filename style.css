@@ -108,7 +108,7 @@ h3 {
 #fence {
     font-size: 45px;
     color: black;
-    text-shadow: 0 0 1px white ,-5px 0 5px rgb(83, 83, 247), 5px 0px 5px red, 0 0 10px gold, 0 0 2px white;
+    text-shadow: 0 0 1px white ,-2.5px 0 5px rgb(83, 83, 247), 2.5px 0px 5px red, 0 0 10px gold, 0 0 2px white;
     margin: 3px auto;
     padding: 2px;
 }
