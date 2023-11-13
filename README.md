@@ -6,3 +6,5 @@ Game ini menggunakan kontrol mouse atau touchpad, memiliki 3 mode permainan(1 mo
 
 ## Pages
 https://kurniawanarthur.github.io/bluehornedbull/
+
+notes: saat pertama kali mengakses webnya dimohon untuk menunggu sebentar sampai semua resourcesnya ter-reload sempurna, alternative: hard-refresh(Ctrl+Shift+r)
